@@ -336,7 +336,7 @@ function next(s){
 }
 
 async function submitData() {
-    const name = document.getElementById('uName').value.trim();
+    const u_name = document.getElementById('uName').value.trim();
     const phone = document.getElementById('uPhone').value.trim();
     const email = document.getElementById('uEmail').value.trim();
 
@@ -352,8 +352,8 @@ async function submitData() {
     let rec = score <= 7 ? 'AI พื้นฐาน' : score <= 14 ? 'Marketing & Creative' : 'All-in-One';
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec';
     
-     const params = `Name=${encodeURIComponent(name)}&Phone=${encodeURIComponent(phone)}&Email=${encodeURIComponent(email)}&Score=${score}&Recommendation=${encodeURIComponent(rec)}`;
-    const finalURL = `${scriptURL}?${params}`;
+     const params = `Name=${encodeURIComponent(u_name)}&Phone=${encodeURIComponent(phone)}&Email=${encodeURIComponent(email)}&Score=${score}&Recommendation=${encodeURIComponent(rec)}`;
+     const finalURL = `${scriptURL}?${params}`;
 
        const img = new Image();
     img.src = finalURL; 
