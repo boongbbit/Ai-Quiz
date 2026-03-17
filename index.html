@@ -350,19 +350,14 @@ async function submitData() {
     btn.disabled = true;
 
     let rec = score <= 7 ? 'AI พื้นฐาน' : score <= 14 ? 'Marketing & Creative' : 'All-in-One';
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec?';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec';
     
-    // สร้าง Query String
-    const params = `Name=${encodeURIComponent(name)}&Phone=${encodeURIComponent(phone)}&Email=${encodeURIComponent(email)}&Score=${score}&Recommendation=${encodeURIComponent(rec)}`;
+     const params = `Name=${encodeURIComponent(name)}&Phone=${encodeURIComponent(phone)}&Email=${encodeURIComponent(email)}&Score=${score}&Recommendation=${encodeURIComponent(rec)}`;
     const finalURL = `${scriptURL}?${params}`;
 
-    // --- เทคนิค Image Beacon ---
-    // เราสร้าง Object รูปภาพขึ้นมาในหน่วยความจำ แล้วสั่งให้มันโหลด URL ของ Google Script
-    // วิธีนี้ In-App Browser จะมองว่าเป็นการโหลดรูปธรรมดา และไม่บล็อกครับ
-    const img = new Image();
+       const img = new Image();
     img.src = finalURL; 
 
-    // รอแป๊บเดียวเพื่อให้มั่นใจว่า Request ถูกส่งออกไปแล้ว
     setTimeout(() => {
         document.getElementById('leadForm').classList.remove('active');
         showSummary(rec);
