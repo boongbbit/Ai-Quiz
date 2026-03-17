@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Readiness Check - สำหรับช่างไอที</title>
+<title>AI Readiness Check-ร้านมือถือ ช่างซ่อม</title>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -139,7 +139,7 @@ body{font-family:'Kanit',-apple-system,sans-serif;background:var(--light);color:
 
   <!-- Header -->
   <div class="card-header" id="hdr">
-    <div class="badge-wrap"><span class="badge">เหลือสิทธิ์ eBook ฟรีอีกไม่มาก</span></div>
+    <div class="badge-wrap"><span class="badge">ตอบ 7 ข้อรับ eBook ฟรีมีจำกัด!</span></div>
     <div class="prog-meta">
       <span class="prog-label">ความคืบหน้า</span>
       <span class="prog-count" id="prog-txt">1 / 7</span>
@@ -348,7 +348,7 @@ async function submitData(){
   const d=new FormData();
   d.append('Name',name);d.append('Email',email);d.append('Phone',phone);
   d.append('Score',score);d.append('Recommendation',rec);
-  try{await fetch('ใส่_URL_ของ_GOOGLE_APPS_SCRIPT_ที่นี่',{method:'POST',body:d});}catch(e){}
+  try{await fetch('https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec',{method:'POST',body:d});}catch(e){}
 
   document.getElementById('leadForm').classList.remove('active');
   showSummary(rec);
@@ -445,9 +445,9 @@ function showFinalResult(rec){
 
   // course cards
   const courses=[
-    {name:'AI พื้นฐาน สำหรับช่างไอที',desc:'เรียนรู้ AI ตั้งแต่ 0 ใช้งานจริงในร้านได้เลย ไม่ต้องมีพื้นฐานโค้ด',key:'AI พื้นฐาน',link:'ใส่_ลิงก์_LINE_MYSHOP_1'},
-    {name:'AI Marketing & Creative',desc:'สร้างโพสต์ รูป วิดีโอ โฆษณา ด้วย AI ดึงลูกค้าเข้าร้านอัตโนมัติ',key:'Marketing & Creative',link:'ใส่_ลิงก์_LINE_MYSHOP_2'},
-    {name:'All-in-One AI สำหรับร้านช่าง',desc:'ครอบคลุมทุกด้าน ตั้งแต่ Automation จนถึง Marketing และการสเกลทีม',key:'All-in-One',link:'ใส่_ลิงก์_LINE_MYSHOP_3'},
+    {name:'AI พื้นฐาน สำหรับช่างไอที',desc:'เรียนรู้ AI ตั้งแต่ 0 ใช้งานจริงในร้านได้เลย ไม่ต้องมีพื้นฐานโค้ด',key:'AI พื้นฐาน',link:'https://shop.line.me/@072ujfbq/product/1007928670'},
+    {name:'AI Marketing & Creative',desc:'สร้างโพสต์ รูป วิดีโอ โฆษณา ด้วย AI ดึงลูกค้าเข้าร้านอัตโนมัติ',key:'Marketing & Creative',link:'https://shop.line.me/@072ujfbq/product/1005925293'},
+    {name:'All-in-One AI สำหรับร้านช่าง',desc:'ครอบคลุมทุกด้าน ตั้งแต่ Automation จนถึง Marketing และการสเกลทีม',key:'All-in-One',link:'https://shop.line.me/@072ujfbq/product/1007755845'},
   ];
 
   const wrap=document.getElementById('courseCards');
@@ -469,7 +469,7 @@ function openEbook(){
 function openConsult(){
   // เปิด LINE chat และพิมพ์ข้อความให้อัตโนมัติ
   const msg = encodeURIComponent('แชทส่วนตัว');
-  const lineId = 'ใส่_LINE_ID_ของคุณที่นี่'; // เช่น @yourshop
+  const lineId = 'https://lin.ee/SfJVD4l'; // เช่น @yourshop
   window.open('https://line.me/R/oaMessage/' + lineId + '/?text=' + msg, '_blank');
 }
 
