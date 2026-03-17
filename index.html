@@ -335,24 +335,54 @@ function next(s){
   document.getElementById('prog-txt').textContent=Math.min(cur,total)+' / '+total;
 }
 
-async function submitData(){
-  const name=document.getElementById('uName').value.trim();
-  const phone=document.getElementById('uPhone').value.trim();
-  const email=document.getElementById('uEmail').value.trim();
-  if(!name||!phone||!email){alert('กรุณากรอกข้อมูลให้ครบครับ');return;}
-  const btn=document.getElementById('subBtn');
-  btn.textContent='กำลังบันทึกข้อมูล...';btn.disabled=true;
+async function submitData() {
+    // 1. ดึงค่า (ตรวจสอบ ID ให้ตรงกับใน Input ของคุณ)
+    const name = document.getElementById('uName').value.trim();
+    const phone = document.getElementById('uPhone').value.trim();
+    const email = document.getElementById('uEmail').value.trim();
 
-  let rec=score<=7?'AI พื้นฐาน':score<=14?'Marketing & Creative':'All-in-One';
-  const params=new URLSearchParams({Name:name,Email:email,Phone:phone,Score:score,Recommendation:rec});
-  window.callback = function(){};
-  const script=document.createElement('script');
-  script.src='https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec?'+params.toString()+'&callback=callback';
-  document.body.appendChild(script);
-  await new Promise(r=>setTimeout(r,1500));
+    if (!name || !phone || !email) {
+        alert('กรุณากรอกข้อมูลให้ครบถ้วนนะครับช่าง!');
+        return;
+    }
 
-  document.getElementById('leadForm').classList.remove('active');
-  showSummary(rec);
+    const btn = document.getElementById('subBtn');
+    btn.textContent = '⏳ กำลังบันทึกข้อมูล...';
+    btn.disabled = true;
+
+    // 2. เตรียมข้อมูล
+    let rec = score <= 7 ? 'AI พื้นฐาน' : score <= 14 ? 'Marketing & Creative' : 'All-in-One';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec';
+    
+    const params = new URLSearchParams({
+        Name: name,
+        Phone: phone,
+        Email: email,
+        Score: score,
+        Recommendation: rec,
+        callback: 'callback' // จำเป็นสำหรับ JSONP
+    });
+
+    // 3. ส่งข้อมูลแบบ Fetch (เสถียรกว่าบนมือถือ)
+    try {
+        // ใช้โหมด no-cors เพื่อข้ามปัญหา Security บนมือถือ
+        await fetch(`${scriptURL}?${params.toString()}`, {
+            method: 'GET',
+            mode: 'no-cors'
+        });
+
+        // ให้เวลาระบบนิดนึงก่อนเปลี่ยนหน้า (500ms)
+        setTimeout(() => {
+            document.getElementById('leadForm').classList.remove('active');
+            showSummary(rec); // ฟังก์ชันโชว์หน้าสรุป
+        }, 500);
+
+    } catch (err) {
+        console.error(err);
+        alert('อุ๊ย! เน็ตมือถืออาจจะไม่เสถียร รบกวนกดส่งอีกรอบนะครับ');
+        btn.textContent = 'กดส่งอีกครั้ง';
+        btn.disabled = false;
+    }
 }
 
 // ── Score Summary ──
