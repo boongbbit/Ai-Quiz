@@ -467,10 +467,8 @@ function openEbook(){
 }
 
 function openConsult(){
-  // เปิด LINE chat และพิมพ์ข้อความให้อัตโนมัติ
   const msg = encodeURIComponent('แชทส่วนตัว');
-  const lineId = 'https://lin.ee/SfJVD4l'; // เช่น @yourshop
-  window.open('https://lin.ee/SfJVD4l' + lineId + '/?text=' + msg, '_blank');
+  window.open('https://lin.ee/SfJVD4l?text=' + msg, '_blank');
 }
 
 function goBack(){
