@@ -335,7 +335,6 @@ function next(s){
   document.getElementById('prog-txt').textContent=Math.min(cur,total)+' / '+total;
 }
 
-// ── Submit lead form → show Score Summary ──
 async function submitData(){
   const name=document.getElementById('uName').value.trim();
   const phone=document.getElementById('uPhone').value.trim();
@@ -345,10 +344,8 @@ async function submitData(){
   btn.textContent='กำลังบันทึกข้อมูล...';btn.disabled=true;
 
   let rec=score<=7?'AI พื้นฐาน':score<=14?'Marketing & Creative':'All-in-One';
-  const d=new FormData();
-  d.append('Name',name);d.append('Email',email);d.append('Phone',phone);
-  d.append('Score',score);d.append('Recommendation',rec);
-  try{await fetch('https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec',{method:'POST',body:d});}catch(e){}
+  const params=new URLSearchParams({Name:name,Email:email,Phone:phone,Score:score,Recommendation:rec});
+  try{await fetch('https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec?'+params.toString());}catch(e){}
 
   document.getElementById('leadForm').classList.remove('active');
   showSummary(rec);
@@ -446,8 +443,8 @@ function showFinalResult(rec){
   // course cards
   const courses=[
     {name:'AI พื้นฐาน สำหรับช่างไอที',desc:'เรียนรู้ AI ตั้งแต่ 0 ใช้งานจริงในร้านได้เลย ไม่ต้องมีพื้นฐานโค้ด',key:'AI พื้นฐาน',link:'https://shop.line.me/@072ujfbq/product/1007928670'},
-    {name:'AI Marketing & Creative',desc:'สร้างโพสต์ รูป วิดีโอ โฆษณา ด้วย AI ดึงลูกค้าเข้าร้านอัตโนมัติ',key:'Marketing & Creative',link:'https://shop.line.me/@072ujfbq/product/1005925293'},
-    {name:'All-in-One AI สำหรับร้านช่าง',desc:'ครอบคลุมทุกด้าน ตั้งแต่ Automation จนถึง Marketing และการสเกลทีม',key:'All-in-One',link:'https://shop.line.me/@072ujfbq/product/1007755845'},
+    {name:'AI Marketing & Creative',desc:'สร้างโพสต์ รูป วิดีโอ โฆษณา ด้วย AI x Marketing',key:'Marketing & Creative',link:'https://shop.line.me/@072ujfbq/product/1005925293'},
+    {name:'All-in-One AI สำหรับร้านช่าง',desc:'เจาะลึกเฉพาะงานที่ใช่ พร้อม Private Consult Ai Marketing',key:'All-in-One',link:'https://shop.line.me/@072ujfbq/product/1007755845'},
   ];
 
   const wrap=document.getElementById('courseCards');
