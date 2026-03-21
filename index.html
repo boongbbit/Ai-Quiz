@@ -1,490 +1,336 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Readiness Check-ร้านมือถือ ช่างซ่อม</title>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#0071e3;--blue-h:#0077ed;--blue-lt:#e8f2fd;
-  --orange:#ff6b00;--orange-lt:#fff3eb;
-  --dark:#1d1d1f;--mid:#6e6e73;--light:#f5f5f7;--white:#fff;--border:#d2d2d7;
-  --green:#1c7c40;--green-lt:#e6f4ec;
-  --red:#c0392b;--red-lt:#fdf0ef;
-  --yellow:#b45309;--yellow-lt:#fef9ec;
-  --radius-sm:10px;--radius-md:14px;--radius-lg:20px;--radius-xl:26px;
-}
-body{font-family:'Kanit',-apple-system,sans-serif;background:var(--light);color:var(--dark);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;padding:20px 14px 48px;min-height:100vh}
-.card{width:100%;max-width:460px;background:var(--white);border-radius:var(--radius-xl);box-shadow:0 20px 60px rgba(0,0,0,.12);overflow:hidden}
-
-/* Header */
-.card-header{padding:24px 28px 0}
-.badge-wrap{display:flex;justify-content:center;margin-bottom:18px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px 5px 10px;background:var(--orange-lt);color:var(--orange);border-radius:99px;font-size:12px;font-weight:600}
-.badge::before{content:'';width:7px;height:7px;background:var(--orange);border-radius:50%;animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
-.prog-meta{display:flex;justify-content:space-between;margin-bottom:7px}
-.prog-label{font-size:11px;color:var(--mid)}
-.prog-count{font-size:11px;color:var(--blue);font-weight:600}
-.prog-track{height:5px;background:#eee;border-radius:99px;overflow:hidden}
-.prog-fill{height:100%;width:14.28%;background:linear-gradient(90deg,#0071e3,#34aadc);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
-
-/* Body */
-.card-body{padding:24px 28px 28px}
-.step{display:none;animation:stepIn .32s cubic-bezier(.4,0,.2,1)}
-.step.active{display:block}
-@keyframes stepIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.step-num{font-size:11px;font-weight:600;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
-.step-q{font-size:1.1rem;font-weight:600;line-height:1.55;color:var(--dark);margin-bottom:18px}
-.options{display:flex;flex-direction:column;gap:9px}
-.opt{display:flex;align-items:center;gap:13px;padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:border-color .15s,background .15s,transform .1s;-webkit-tap-highlight-color:transparent}
-.opt:hover{border-color:var(--blue);background:var(--blue-lt);transform:translateY(-1px)}
-.opt:active{transform:scale(.99)}
-.opt input{display:none}
-.radio{width:19px;height:19px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .15s}
-.opt:hover .radio{border-color:var(--blue)}
-.radio::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--blue);transform:scale(0);transition:transform .13s}
-.opt input:checked~.radio{border-color:var(--blue);background:var(--blue-lt)}
-.opt input:checked~.radio::after{transform:scale(1)}
-.opt-text{font-size:14px;font-weight:400;line-height:1.45;color:var(--dark)}
-
-/* Lead Form */
-.form-hd{text-align:center;margin-bottom:20px}
-.form-icon{width:50px;height:50px;background:var(--blue-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:20px}
-.form-title{font-size:1.15rem;font-weight:700;color:var(--dark);margin-bottom:3px}
-.form-sub{font-size:13px;color:var(--mid);font-weight:400}
-.fg{margin-bottom:11px}
-.fg label{display:block;font-size:11px;font-weight:500;color:var(--mid);margin-bottom:4px;letter-spacing:.02em}
-.fg input{width:100%;padding:12px 15px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'Kanit',sans-serif;font-size:15px;color:var(--dark);background:var(--white);outline:none;transition:border-color .15s,box-shadow .15s}
-.fg input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,113,227,.11)}
-.fg input::placeholder{color:#b5b5ba}
-.privacy{font-size:11px;color:#bbb;text-align:center;margin-bottom:16px;line-height:1.6}
-
-/* ── Score Summary Page ── */
-.summary-area{display:none;animation:stepIn .4s ease}
-.summary-area.active{display:block}
-
-.score-circle-wrap{display:flex;justify-content:center;margin-bottom:20px}
-.score-circle{width:110px;height:110px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid var(--border);position:relative}
-.score-circle .score-num{font-size:2rem;font-weight:700;line-height:1}
-.score-circle .score-max{font-size:12px;color:var(--mid);font-weight:400;margin-top:2px}
-
-.readiness-label{text-align:center;margin-bottom:20px}
-.readiness-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:8px}
-.readiness-title{font-size:1.2rem;font-weight:700;color:var(--dark);margin-bottom:6px}
-.readiness-desc{font-size:13px;color:var(--mid);line-height:1.7}
-
-/* Breakdown bars */
-.breakdown{background:var(--light);border-radius:var(--radius-md);padding:16px 18px;margin-bottom:20px}
-.breakdown-title{font-size:11px;font-weight:600;color:var(--mid);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
-.bar-row{margin-bottom:10px}
-.bar-row:last-child{margin-bottom:0}
-.bar-label-row{display:flex;justify-content:space-between;margin-bottom:4px}
-.bar-label{font-size:12px;color:var(--dark);font-weight:500}
-.bar-val{font-size:12px;color:var(--mid)}
-.bar-track{height:6px;background:#ddd;border-radius:99px;overflow:hidden}
-.bar-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-
-/* Verdict box */
-.verdict-box{border-radius:var(--radius-md);padding:16px 18px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start}
-.verdict-icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.verdict-text-title{font-size:13px;font-weight:700;margin-bottom:3px}
-.verdict-text-body{font-size:12px;line-height:1.65;font-weight:400}
-
-/* Buttons */
-.btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:15px;border:none;border-radius:var(--radius-md);font-family:'Kanit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s,background .15s;text-decoration:none}
-.btn:active{transform:scale(.98)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-blue{background:var(--blue);color:#fff}
-.btn-blue:hover:not(:disabled){background:var(--blue-h)}
-.btn-green{background:var(--green);color:#fff;margin-top:10px}
-.btn-green:hover:not(:disabled){background:#176035}
-.btn-outline{background:transparent;color:var(--dark);border:1.5px solid var(--border);margin-top:9px}
-.btn-outline:hover:not(:disabled){background:var(--light)}
-
-/* Result / Final */
-.result-area{display:none;text-align:center;animation:stepIn .4s ease}
-.result-area.active{display:block}
-.res-icon{width:68px;height:68px;background:var(--blue-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:28px}
-.res-tag{display:inline-block;padding:4px 13px;background:var(--blue-lt);color:var(--blue);border-radius:99px;font-size:12px;font-weight:600;margin-bottom:10px}
-.res-title{font-size:1.25rem;font-weight:700;color:var(--dark);margin-bottom:8px;line-height:1.4}
-.res-desc{font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:22px}
-.divider{height:1px;background:var(--border);margin-bottom:18px}
-
-/* Course cards */
-.course-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
-.course-card{border:1.5px solid var(--border);border-radius:var(--radius-md);padding:14px 16px;text-align:left;cursor:pointer;transition:border-color .15s,background .15s,transform .1s;-webkit-tap-highlight-color:transparent}
-.course-card:hover{border-color:var(--blue);background:var(--blue-lt);transform:translateY(-1px)}
-.course-card:active{transform:scale(.99)}
-.course-card.recommended{border-color:var(--blue);border-width:2px}
-.course-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-.course-name{font-size:14px;font-weight:600;color:var(--dark)}
-.course-rec-badge{font-size:10px;font-weight:600;padding:2px 8px;background:var(--blue);color:#fff;border-radius:99px;flex-shrink:0;margin-left:8px;margin-top:1px}
-.course-desc{font-size:12px;color:var(--mid);line-height:1.55}
-.res-note{font-size:11px;color:#c0c0c5;margin-top:14px;line-height:1.6;text-align:center}
-.consult-box{background:var(--blue-lt);border-radius:var(--radius-md);padding:14px 16px;margin-top:14px;text-align:center}
-.consult-label{font-size:12px;color:var(--mid);margin-bottom:10px}
-.btn-consult{background:var(--blue);color:#fff;border:none;border-radius:var(--radius-md);padding:13px;width:100%;font-family:'Kanit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s,transform .1s}
-.btn-consult:hover{background:var(--blue-h)}
-.btn-consult:active{transform:scale(.98)}
-.btn-back{width:100%;margin-top:10px;padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:var(--radius-md);font-family:'Kanit',sans-serif;font-size:14px;font-weight:500;color:var(--mid);cursor:pointer;transition:background .15s,border-color .15s,transform .1s}
-.btn-back:hover{background:var(--light);border-color:#bbb;color:var(--dark)}
-.btn-back:active{transform:scale(.98)}
-</style>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; font-family: 'Sarabun', sans-serif; }
+    .card { border: none; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .header-banner { background: linear-gradient(135deg, #1a237e, #0d47a1); color: white; padding: 40px 20px; border-radius: 20px 20px 0 0; }
+    .participant-card { border-left: 8px solid #0d47a1; background: #fff; margin-bottom: 20px; transition: 0.3s; }
+    .summary-section { background: #e3f2fd; border: 2px dashed #0d47a1; border-radius: 15px; padding: 25px; }
+    .price-big { font-size: 2.5rem; font-weight: bold; color: #0d47a1; }
+    
+    .btn-check:checked + .btn-outline-primary {
+      background-color: #0d6efd !important;
+      color: white !important;
+      border-color: #0d47a1 !important;
+      box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    }
+    .btn-outline-primary {
+      border: 2px solid #0d6efd;
+      color: #0d6efd;
+      background-color: white;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body>
-<div class="card">
 
-  <!-- Header -->
-  <div class="card-header" id="hdr">
-    <div class="badge-wrap"><span class="badge">ตอบ 7 ข้อรับ eBook ฟรีมีจำกัด!</span></div>
-    <div class="prog-meta">
-      <span class="prog-label">ความคืบหน้า</span>
-      <span class="prog-count" id="prog-txt">1 / 7</span>
+<div class="mb-4 text-center">
+  <img src="https://lh3.googleusercontent.com/d/1end8aa0v_pJUNWr0j59Zgr6WobgRFypZ" 
+       class="img-fluid rounded shadow-sm" 
+       style="max-width: 60%; height: auto;" 
+       alt="คอร์สซ่อมมือถือพื้นฐานจบงานหน้าร้าน 25-26 เม.ย.2026">
+</div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+
+      <div class="card mb-4 p-4 text-center">
+        <h5 class="fw-bold mb-3 text-primary">🔍 ตรวจสอบรายชื่อ/สถานะการชำระเงิน</h5>
+        <div class="row justify-content-center">
+          <div class="col-md-7">
+            <div class="input-group">
+              <input type="tel" id="searchPhone" class="form-control" placeholder="ระบุเบอร์โทรศัพท์ที่ใช้สมัคร">
+              <button class="btn btn-dark px-4" onclick="checkRegStatus()">เช็คสถานะ</button>
+            </div>
+          </div>
+        </div>
+        <div id="statusResult" class="mt-3"></div>
+      </div>
+
+      <div class="card">
+        <div class="header-banner text-center">
+          <h1 class="fw-bold">ลงทะเบียนอบรมคอร์สซ่อมมือถือพื้นฐานจบงานหน้าร้าน 25-26 เม.ย.2026</h1>
+          <h4 class="mb-2">พื้นฐานซ่อมมือถือ x ระบบล็อค MDM x AI การตลาด</h4>
+          <p class="mb-0">วันที่ 25-26 เมษายน 2569 | ณ ห้องอบรม JK Mobile โคราช</p>
+        </div>
+
+        <form id="regForm" class="p-4 p-md-5" onsubmit="submitForm(event)">
+          
+          <div class="mb-5 text-center">
+            <label class="form-label fw-bold h5 text-primary">ระบุจำนวนผู้เข้าอบรมทั้งหมด (รวมผู้ติดตาม)</label>
+            <div class="d-flex justify-content-center">
+              <select name="participantCount" id="pCount" class="form-select form-select-lg w-50" onchange="generateFields(); updateCalculation();">
+                <option value="1">1 ท่าน</option>
+                <option value="2">2 ท่าน</option>
+                <option value="3">3 ท่าน</option>
+                <option value="4">4 ท่าน</option>
+                <option value="5">5 ท่าน</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="participantFields">
+            <div class="participant-card shadow-sm p-4 rounded border">
+              <h5 class="fw-bold text-primary mb-3">คนที่ 1 (ข้อมูลหลัก/ผู้ติดต่อ)</h5>
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label class="form-label">คำนำหน้า</label>
+                  <select name="title" class="form-select"><option>นาย</option><option>นาง</option><option>นางสาว</option></select>
+                </div>
+                <div class="col-md-5">
+                  <label class="form-label">ชื่อ(ภาษาไทย)</label>
+                  <input type="text" name="firstName" class="form-control" placeholder="ชื่อจริง" required>
+                </div>
+                <div class="col-md-5">
+                  <label class="form-label">นามสกุล(ภาษาไทย)</label>
+                  <input type="text" name="lastName" class="form-control" placeholder="นามสกุล" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">เบอร์โทรศัพท์</label>
+                  <input type="tel" name="phone" class="form-control" placeholder="เบอร์โทรที่ติดต่อได้" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">อีเมล</label>
+                  <input type="email" name="email" class="form-control" placeholder="ระบุอีเมล (ตรวจสอบให้ถูกต้อง เพื่อใช้เป็นไอดีโปรแกรมปลดล็อค)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-5">
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">8. ชื่อธุรกิจ-ร้านค้า</label>
+              <input type="text" name="businessName" class="form-control form-control-lg" placeholder="ชื่อร้านของท่าน" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold">9. สถานที่ตั้งธุรกิจ-ร้าน</label>
+              <input type="text" name="businessLocation" class="form-control form-control-lg" placeholder="จังหวัด หรือ พิกัดที่ตั้งร้าน" required>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold">10. ท่านพบเห็นสื่อประชาสัมพันธ์จากช่องทางใด?</label>
+            <div class="card p-3 bg-light border">
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="source" value="เพจโคราชเทรนนิ่ง" id="s1" checked onclick="toggleOtherInput(false)">
+                <label class="form-check-label" for="s1">เพจโคราชเทรนนิ่ง</label>
+              </div>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="source" value="เพจเซียนไอที" id="s2" onclick="toggleOtherInput(false)">
+                <label class="form-check-label" for="s2">เพจเซียนไอที</label>
+              </div>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="source" value="อื่นๆ" id="s3" onclick="toggleOtherInput(true)">
+                <label class="form-check-label" for="s3">อื่นๆ (โปรดระบุ)</label>
+              </div>
+              <div id="otherSourceWrapper" class="mt-2 d-none">
+                <input type="text" name="sourceOther" id="sourceOther" class="form-control" placeholder="ระบุช่องทางที่ท่านพบสื่อ...">
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4 text-center">
+            <label class="form-label fw-bold d-block mb-3">11. ท่านสนใจหัวข้อใดเป็นพิเศษ? (เลือกได้มากกว่า 1 หัวข้อ)</label>
+            <div class="row g-2">
+              <div class="col-6 col-md-3">
+                <input type="checkbox" name="interests" value="การแกะเครื่องซ่อม" class="btn-check" id="i1" autocomplete="off">
+                <label class="btn btn-outline-primary py-3 w-100" for="i1">การแกะเครื่องซ่อม</label>
+              </div>
+              <div class="col-6 col-md-3">
+                <input type="checkbox" name="interests" value="งานเปลี่ยน usb ชาร์จ" class="btn-check" id="i2" autocomplete="off">
+                <label class="btn btn-outline-primary py-3 w-100" for="i2">งานเปลี่ยน usb ชาร์จ</label>
+              </div>
+              <div class="col-6 col-md-3">
+                <input type="checkbox" name="interests" value="ระบบล็อค MDM" class="btn-check" id="i3" autocomplete="off">
+                <label class="btn btn-outline-primary py-3 w-100" for="i3">ระบบล็อค MDM</label>
+              </div>
+              <div class="col-6 col-md-3">
+                <input type="checkbox" name="interests" value="AI การตลาด 2026" class="btn-check" id="i4" autocomplete="off">
+                <label class="btn btn-outline-primary py-3 w-100" for="i4">AI การตลาด</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5 shadow-sm rounded">
+            <div class="card border">
+              <div class="card-body p-0">
+                <div class="bg-danger text-white p-3 fw-bold rounded-top">
+                  12. เลือกรูปแบบการชำระเงิน
+                </div>
+                <div class="p-4 bg-light">
+                  <select name="paymentType" id="pType" class="form-select form-select-lg mb-4" onchange="updateCalculation()">
+                    <option value="deposit">โอนมัดจำ 1,000 บาท / ท่าน</option>
+                    <option value="full">ชำระเต็มจำนวน 3,900 บาท / ท่าน</option>
+                  </select>
+
+                  <div class="summary-section text-center">
+                    <h5 class="text-muted mb-2">สรุปยอดที่ต้องโอนสุทธิ</h5>
+                    <div class="d-flex justify-content-center align-items-baseline gap-2">
+                      <span id="calcDetail" class="h5 text-muted">(1 ท่าน x 1,000) = </span>
+                      <span class="price-big" id="summaryAmount">1,000</span>
+                      <span class="h4 text-primary fw-bold">บาท</span>
+                    </div>
+                    <input type="hidden" name="totalAmount" id="totalAmount" value="1000">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<div class="mb-4 text-center">
+  <img src="https://lh3.googleusercontent.com/d/1h0HfOAGC0fRiWEfuLnkyvy86Zfvlub4G" 
+       class="img-fluid rounded shadow-sm" 
+       style="max-width: 100%; height: auto;" 
+       alt="qr siean">
+
+          <div class="mb-4">
+            <label class="form-label fw-bold"style="font-size:20px; font-weight:700;">13. แนบหลักฐานการโอนเงิน (สลิป)</label>
+            <input type="file" name="slipFile" id="slipFileInput" class="form-control form-control-lg" accept="image/*" required>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-bold" style="font-size:20px; font-weight:700;">14. ระบุหมายเหตุเพิ่มเติม | ได้รับสิทธิ์จากร้าน Jk Mobile </label>
+            <textarea name="note" id="note" class="form-control" rows="3" placeholder="ความต้องการอื่นๆ เพิ่มเติม..."></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-100 py-4 shadow fw-bold h4">ยืนยันข้อมูลและส่งการลงทะเบียน</button>
+
+        </form>
+      </div>
     </div>
-    <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
   </div>
-
-  <div class="card-body">
-
-    <!-- Q1 -->
-    <div class="step active" id="step1">
-      <div class="step-num">คำถามที่ 1</div>
-      <div class="step-q">คุณเคยลองใช้ AI มาช่วยงานที่ร้านบ้างหรือยัง?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q1" value="0" onchange="next(1)"><span class="radio"></span><span class="opt-text">ไม่เคยเลย</span></label>
-        <label class="opt"><input type="radio" name="q1" value="1" onchange="next(1)"><span class="radio"></span><span class="opt-text">เคยลองเล่นนิดหน่อย</span></label>
-        <label class="opt"><input type="radio" name="q1" value="3" onchange="next(1)"><span class="radio"></span><span class="opt-text">ใช้ประจำ / ประหยัดเวลามาก</span></label>
-      </div>
-    </div>
-
-    <!-- Q2 -->
-    <div class="step" id="step2">
-      <div class="step-num">คำถามที่ 2</div>
-      <div class="step-q">ปัจจุบันคุณใช้เครื่องมือดิจิทัลอะไรช่วยจัดการร้านบ้าง?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q2" value="0" onchange="next(2)"><span class="radio"></span><span class="opt-text">ไม่ได้ใช้อะไรเป็นพิเศษ จดสมุดหรือจำเอา</span></label>
-        <label class="opt"><input type="radio" name="q2" value="1" onchange="next(2)"><span class="radio"></span><span class="opt-text">ใช้ LINE / Facebook ทั่วไป</span></label>
-        <label class="opt"><input type="radio" name="q2" value="3" onchange="next(2)"><span class="radio"></span><span class="opt-text">ใช้แอปจัดการออเดอร์หรือ POS แล้ว</span></label>
-      </div>
-    </div>
-
-    <!-- Q3 -->
-    <div class="step" id="step3">
-      <div class="step-num">คำถามที่ 3</div>
-      <div class="step-q">คุณใช้เวลาตอบลูกค้า / คีย์ข้อมูล นานแค่ไหนต่อวัน?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q3" value="3" onchange="next(3)"><span class="radio"></span><span class="opt-text">มากกว่า 3 ชั่วโมง — เสียเวลามากเลย</span></label>
-        <label class="opt"><input type="radio" name="q3" value="2" onchange="next(3)"><span class="radio"></span><span class="opt-text">1–3 ชั่วโมง — พอรับได้แต่อยากลด</span></label>
-        <label class="opt"><input type="radio" name="q3" value="0" onchange="next(3)"><span class="radio"></span><span class="opt-text">น้อยกว่า 1 ชั่วโมง — ยังโอเคอยู่</span></label>
-      </div>
-    </div>
-
-    <!-- Q4 -->
-    <div class="step" id="step4">
-      <div class="step-num">คำถามที่ 4</div>
-      <div class="step-q">คุณเคยสร้างคอนเทนต์ (โพสต์/รูป/วิดีโอ) โปรโมตร้านด้วยตัวเองไหม?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q4" value="0" onchange="next(4)"><span class="radio"></span><span class="opt-text">ยังไม่เคยทำเลย ไม่รู้จะเริ่มยังไง</span></label>
-        <label class="opt"><input type="radio" name="q4" value="1" onchange="next(4)"><span class="radio"></span><span class="opt-text">ทำบ้างแต่ไม่สม่ำเสมอ</span></label>
-        <label class="opt"><input type="radio" name="q4" value="3" onchange="next(4)"><span class="radio"></span><span class="opt-text">ทำประจำ มีแผนโพสต์ชัดเจน</span></label>
-      </div>
-    </div>
-
-    <!-- Q5 -->
-    <div class="step" id="step5">
-      <div class="step-num">คำถามที่ 5</div>
-      <div class="step-q">ถ้าต้องเรียนรู้สิ่งใหม่ คุณชอบเรียนแบบไหนมากที่สุด?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q5" value="3" onchange="next(5)"><span class="radio"></span><span class="opt-text">วิดีโอสั้น กดตามทำได้เลย</span></label>
-        <label class="opt"><input type="radio" name="q5" value="2" onchange="next(5)"><span class="radio"></span><span class="opt-text">อ่านคู่มือ / eBook ตามสบาย</span></label>
-        <label class="opt"><input type="radio" name="q5" value="1" onchange="next(5)"><span class="radio"></span><span class="opt-text">ฟังไลฟ์หรือเรียน Live</span></label>
-      </div>
-    </div>
-
-    <!-- Q6 -->
-    <div class="step" id="step6">
-      <div class="step-num">คำถามที่ 6</div>
-      <div class="step-q">เป้าหมายหลักของคุณในปีนี้คืออะไร?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q6" value="1" onchange="next(6)"><span class="radio"></span><span class="opt-text">ลดงานซ้ำซ้อน ประหยัดเวลาในร้าน</span></label>
-        <label class="opt"><input type="radio" name="q6" value="2" onchange="next(6)"><span class="radio"></span><span class="opt-text">เพิ่มยอดขาย หาลูกค้าใหม่</span></label>
-        <label class="opt"><input type="radio" name="q6" value="3" onchange="next(6)"><span class="radio"></span><span class="opt-text">สเกลร้านให้ใหญ่ขึ้น มีทีม</span></label>
-      </div>
-    </div>
-
-    <!-- Q7 -->
-    <div class="step" id="step7">
-      <div class="step-num">คำถามที่ 7</div>
-      <div class="step-q">หากมีคอร์ส "AI ภาษาช่าง" ที่กดตามได้ทันที คุณพร้อมเริ่มไหม?</div>
-      <div class="options">
-        <label class="opt"><input type="radio" name="q7" value="3" onclick="next(7)"><span class="radio"></span><span class="opt-text">ลุยเลย! ไม่อยากเหนื่อยแล้ว</span></label>
-        <label class="opt"><input type="radio" name="q7" value="1" onclick="next(7)" onclick="next(7)""><span class="radio"></span><span class="opt-text">สนใจ ขอข้อมูลเพิ่มก่อน</span></label>
-      </div>
-    </div>
-
-    <!-- Lead Form -->
-    <div class="step" id="leadForm">
-      <div class="form-hd">
-        <div class="form-icon">📊</div>
-        <div class="form-title">วิเคราะห์ผลเสร็จแล้ว!</div>
-        <div class="form-sub">กรอกข้อมูลเพื่อรับผลประเมินและ eBook ฟรี</div>
-      </div>
-      <div class="fg"><label>ชื่อของคุณ</label><input type="text" id="uName" placeholder="เช่น สมชาย ช่างไอที"></div>
-      <div class="fg"><label>เบอร์โทรศัพท์</label><input type="tel" id="uPhone" placeholder="08X-XXX-XXXX"></div>
-      <div class="fg"><label>อีเมล (สำหรับรับไฟล์)</label><input type="email" id="uEmail" placeholder="your@email.com"></div>
-      <div class="privacy">🔒 ข้อมูลของคุณจะถูกเก็บเป็นความลับ<br>ใช้เพื่อส่งมอบสิทธิพิเศษเท่านั้น</div>
-      <button class="btn btn-blue" id="subBtn" type="button" onclick="submitData()">ดูผลประเมิน &amp; รับสิทธิ์ทันที →</button>
-    </div>
-
-    <!-- ── Score Summary Page ── -->
-    <div class="summary-area" id="summaryArea">
-
-      <div class="score-circle-wrap">
-        <div class="score-circle" id="scoreCircle">
-          <span class="score-num" id="scoreNum">0</span>
-          <span class="score-max">/ 21 คะแนน</span>
-        </div>
-      </div>
-
-      <div class="readiness-label">
-        <div class="readiness-badge" id="readinessBadge"></div>
-        <div class="readiness-title" id="readinessTitle"></div>
-        <div class="readiness-desc" id="readinessDesc"></div>
-      </div>
-
-      <div class="breakdown">
-        <div class="breakdown-title">วิเคราะห์ทักษะรายด้าน</div>
-        <div class="bar-row">
-          <div class="bar-label-row"><span class="bar-label">การใช้งาน AI ปัจจุบัน</span><span class="bar-val" id="bv1">-</span></div>
-          <div class="bar-track"><div class="bar-fill" id="bf1" style="background:#0071e3;width:0%"></div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label-row"><span class="bar-label">ความพร้อมด้านเครื่องมือ</span><span class="bar-val" id="bv2">-</span></div>
-          <div class="bar-track"><div class="bar-fill" id="bf2" style="background:#34aadc;width:0%"></div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label-row"><span class="bar-label">การสร้างคอนเทนต์</span><span class="bar-val" id="bv3">-</span></div>
-          <div class="bar-track"><div class="bar-fill" id="bf3" style="background:#5e5ce6;width:0%"></div></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label-row"><span class="bar-label">ความพร้อมเรียนรู้</span><span class="bar-val" id="bv4">-</span></div>
-          <div class="bar-track"><div class="bar-fill" id="bf4" style="background:#30d158;width:0%"></div></div>
-        </div>
-      </div>
-
-      <div class="verdict-box" id="verdictBox">
-        <div class="verdict-icon" id="verdictIcon"></div>
-        <div>
-          <div class="verdict-text-title" id="verdictTitle"></div>
-          <div class="verdict-text-body" id="verdictBody"></div>
-        </div>
-      </div>
-
-      <button class="btn btn-blue" onclick="goToResult()">ดูคอร์สที่เหมาะกับฉัน →</button>
-      <button class="btn btn-outline" onclick="openEbook()">📥 รับ eBook ฟรีก่อนเลย</button>
-    </div>
-
-    <!-- ── Final Result / Course Selection ── -->
-    <div class="result-area" id="resultArea">
-      <div class="res-icon">🎯</div>
-      <div class="res-tag" id="resTag">แนะนำสำหรับคุณ</div>
-      <div class="res-title" id="resTitle"></div>
-      <div class="res-desc" id="resDesc"></div>
-      <div class="divider"></div>
-
-      <div style="text-align:left;margin-bottom:6px">
-        <span style="font-size:12px;font-weight:600;color:var(--mid);letter-spacing:.06em;text-transform:uppercase">เลือกคอร์สเรียนที่เหมาะกับคุณ</span>
-      </div>
-      <div class="course-cards" id="courseCards"></div>
-
-      <div class="consult-box">
-        <div class="consult-label">ยังไม่แน่ใจว่าคอร์สไหนเหมาะ?</div>
-        <button class="btn-consult" onclick="openConsult()">💬 ปรึกษาส่วนตัว</button>
-      </div>
-      <button class="btn-back" onclick="goBack()">← กลับหน้าแชท</button>
-      <div class="res-note">แตะเพื่อดูรายละเอียดและสมัครได้เลย<br>ผ่าน LINE MyShop ปลอดภัย ชำระง่าย</div>
-    </div>
-
-  </div><!-- /card-body -->
-</div><!-- /card -->
+</div>
 
 <script>
-// ── State ──
-let score=0, cur=1;
-const total=7;
-const answers={};
-
-function next(s){
-  const el=document.querySelector(`input[name="q${s}"]:checked`);
-  if(!el)return;
-  const v=parseInt(el.value);
-  score+=v;
-  answers[s]=v;
-  document.getElementById(`step${s}`).classList.remove('active');
-  cur++;
-  if(cur<=7){
-    document.getElementById(`step${cur}`).classList.add('active');
-  } else {
-    document.getElementById('leadForm').classList.add('active');
+  function toggleOtherInput(isVisible) {
+    const wrapper = document.getElementById('otherSourceWrapper');
+    const input = document.getElementById('sourceOther');
+    if (isVisible) {
+      wrapper.classList.remove('d-none');
+      input.setAttribute('required', 'true');
+      input.focus();
+    } else {
+      wrapper.classList.add('d-none');
+      input.removeAttribute('required');
+      input.value = '';
+    }
   }
-  const pct=Math.min(cur/total*100,100);
-  document.getElementById('prog').style.width=pct+'%';
-  document.getElementById('prog-txt').textContent=Math.min(cur,total)+' / '+total;
-}
 
-async function submitData() {
-    const u_name = document.getElementById('uName').value.trim();
-    const phone = document.getElementById('uPhone').value.trim();
-    const email = document.getElementById('uEmail').value.trim();
+  function updateCalculation() {
+    const count = parseInt(document.getElementById('pCount').value);
+    const type = document.getElementById('pType').value;
+    const pricePerPerson = (type === 'deposit') ? 1000 : 3900;
+    const total = count * pricePerPerson;
+    document.getElementById('calcDetail').innerText = `(${count} ท่าน x ${pricePerPerson.toLocaleString()}) = `;
+    document.getElementById('summaryAmount').innerText = total.toLocaleString();
+    document.getElementById('totalAmount').value = total;
+  }
 
-    if (!name || !phone || !email) {
-        alert('กรุณากรอกข้อมูลให้ครบครับ');
-        return;
+  function generateFields() {
+    const count = document.getElementById('pCount').value;
+    const container = document.getElementById('participantFields');
+    const firstSection = container.querySelector('.participant-card').cloneNode(true);
+    firstSection.querySelectorAll('input').forEach(i => i.value = '');
+    container.innerHTML = ''; 
+    for (let i = 1; i <= count; i++) {
+      let newField = firstSection.cloneNode(true);
+      newField.querySelector('h5').innerHTML = (i === 1) ? `คนที่ 1 (ข้อมูลหลัก/ผู้ติดต่อ)` : `คนที่ ${i} (ผู้ติดตามคนที่ ${i-1})`;
+      if (i > 1) {
+        newField.querySelectorAll('input[name="phone"], input[name="email"]').forEach(el => el.required = false);
+      }
+      container.appendChild(newField);
+    }
+    updateCalculation();
+  }
+function submitForm(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const fileInput = document.getElementById('slipFileInput');
+    
+    if (fileInput.files.length === 0) {
+      return Swal.fire('ลืมแนบสลิป!', 'กรุณาแนบรูปภาพสลิปก่อนส่งครับ', 'warning');
     }
 
-    const btn = document.getElementById('subBtn');
-    btn.textContent = '⏳ กำลังบันทึก...';
     btn.disabled = true;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm"></span> กำลังบันทึกข้อมูล...`;
 
-    let rec = score <= 7 ? 'AI พื้นฐาน' : score <= 14 ? 'Marketing & Creative' : 'All-in-One';
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwMcuWvNSNTEsVt7AVkwxnbxBe1XC5H9vesJ2o-YovYBpVEWEu9cC80-M3Myud2czXi/exec';
+    const file = fileInput.files[0];
+    const reader = new FileReader();
     
-     const params = `Name=${encodeURIComponent(u_name)}&Phone=${encodeURIComponent(phone)}&Email=${encodeURIComponent(email)}&Score=${score}&Recommendation=${encodeURIComponent(rec)}`;
-     const finalURL = `${scriptURL}?${params}`;
+    reader.onload = function(f) {
+      const formData = {
+        participantCount: document.getElementById('pCount').value,
+        title: getList('title'),
+        firstName: getList('firstName'),
+        lastName: getList('lastName'),
+        phone: getList('phone'),
+        email: getList('email'),
+        businessName: document.getElementsByName('businessName')[0].value,
+        businessLocation: document.getElementsByName('businessLocation')[0].value,
+        paymentType: (document.getElementById('pType').value === 'deposit') ? 'มัดจำ 1000/ท่าน' : 'เต็มจำนวน 3900/ท่าน',
+        source: document.querySelector('input[name="source"]:checked').value,
+        sourceOther: document.getElementById('sourceOther').value,
+        interests: getChecked('interests'),
+        totalAmount: document.getElementById('totalAmount').value,
+        note: document.getElementById('note').value,
+        slipFile: {
+          blob: f.target.result.split(',')[1],
+          mimeType: file.type,
+          name: file.name
+        }
+      };
 
-       const img = new Image();
-    img.src = finalURL; 
-
-    setTimeout(() => {
-        document.getElementById('leadForm').classList.remove('active');
-        showSummary(rec);
-    }, 1500);
-}
-
-// ── Score Summary ──
-function showSummary(rec){
-  document.getElementById('hdr').style.display='none';
-  const sa=document.getElementById('summaryArea');
-  sa.classList.add('active');
-
-  // big score number
-  document.getElementById('scoreNum').textContent=score;
-
-  // colour circle by tier
-  const circle=document.getElementById('scoreCircle');
-  if(score<=7){ circle.style.borderColor='#e74c3c'; circle.style.color='#c0392b'; }
-  else if(score<=14){ circle.style.borderColor='#f39c12'; circle.style.color='#b45309'; }
-  else { circle.style.borderColor='#27ae60'; circle.style.color='#1c7c40'; }
-
-  // readiness level
-  const badge=document.getElementById('readinessBadge');
-  const lvlData=score<=7
-    ? {label:'ระดับ: เริ่มต้น',bg:'var(--red-lt)',color:'var(--red)',title:'ยังมีจุดที่ต้องพัฒนาอีกมาก',desc:'ร้านของคุณยังไม่ได้ใช้ AI ช่วยงาน ซึ่งทำให้เสียเวลาและโอกาสทุกวัน — เรียนรู้พื้นฐานก่อนจะช่วยได้มากที่สุด'}
-    : score<=14
-    ? {label:'ระดับ: กำลังพัฒนา',bg:'var(--yellow-lt)',color:'var(--yellow)',title:'คุณมีพื้นฐานแล้ว แต่ยังไม่เต็มศักยภาพ',desc:'คุณรู้จัก AI บ้างแล้ว แต่ยังไม่ได้ใช้อย่างเป็นระบบ การเรียนเพิ่มจะช่วยให้ประหยัดเวลาและเพิ่มยอดขายได้จริง'}
-    : {label:'ระดับ: พร้อมสเกล',bg:'var(--green-lt)',color:'var(--green)',title:'คุณพร้อมมากแล้ว! แค่ขาด System',desc:'คุณมีทักษะและความพร้อมสูง การเรียนเพิ่มเติมจะช่วยให้สเกลร้านได้เร็วกว่าคู่แข่งอย่างชัดเจน'};
-
-  badge.textContent=lvlData.label;
-  badge.style.background=lvlData.bg;
-  badge.style.color=lvlData.color;
-  document.getElementById('readinessTitle').textContent=lvlData.title;
-  document.getElementById('readinessDesc').textContent=lvlData.desc;
-
-  // breakdown bars (ใช้คะแนนตามกลุ่มคำถาม)
-  const aiUse    = ((answers[1]||0)/3)*100;
-  const toolRdy  = ((answers[2]||0)/3)*100;
-  const content  = ((answers[4]||0)/3)*100;
-  const learnRdy = ((answers[5]||0)/3)*100;
-
-  function setBar(id,val,label){
-    setTimeout(()=>{document.getElementById('bf'+id).style.width=val+'%';},200);
-    const lvl=val>=67?'สูง':val>=34?'ปานกลาง':'ต่ำ';
-    document.getElementById('bv'+id).textContent=lvl;
-    document.getElementById('bv'+id).style.color=val>=67?'var(--green)':val>=34?'var(--yellow)':'var(--red)';
-  }
-  setBar(1,aiUse);setBar(2,toolRdy);setBar(3,content);setBar(4,learnRdy);
-
-  // verdict box
-  const vbox=document.getElementById('verdictBox');
-  const needCourse=score<=14;
-  if(needCourse){
-    vbox.style.background='var(--orange-lt)';vbox.style.border='1px solid #ffd4b0';
-    document.getElementById('verdictIcon').textContent='💡';
-    document.getElementById('verdictTitle').textContent='แนะนำให้เรียนเพิ่มเติม';
-    document.getElementById('verdictTitle').style.color='var(--orange)';
-    document.getElementById('verdictBody').textContent='คะแนนของคุณบ่งชี้ว่ายังมีช่องว่างที่ AI สามารถช่วยร้านคุณได้อีกมาก การเรียนคอร์สที่เหมาะสมจะช่วยลดเวลางานและเพิ่มรายได้ได้ภายใน 30 วัน';
-  } else {
-    vbox.style.background='var(--green-lt)';vbox.style.border='1px solid #a8dfc0';
-    document.getElementById('verdictIcon').textContent='🚀';
-    document.getElementById('verdictTitle').textContent='คุณพร้อมแล้ว ถึงเวลา Upgrade!';
-    document.getElementById('verdictTitle').style.color='var(--green)';
-    document.getElementById('verdictBody').textContent='คะแนนสูง แปลว่าคุณเรียนรู้เร็วและพร้อมใช้งานได้จริง คอร์ส All-in-One จะช่วยให้คุณแซงคู่แข่งที่ยังไม่ใช้ AI ได้อย่างถาวร';
+      // ส่งข้อมูลไปที่ Google Apps Script
+      google.script.run
+        .withSuccessHandler(res => {
+          Swal.fire('สำเร็จ!', res, 'success').then(() => location.reload());
+        })
+        .withFailureHandler(err => {
+          Swal.fire('เกิดข้อผิดพลาด', err.message, 'error');
+          btn.disabled = false;
+          btn.innerHTML = `ยืนยันข้อมูลและส่งการลงทะเบียน`;
+        })
+        .processForm(formData);
+    };
+    reader.readAsDataURL(file);
   }
 
-  // store rec for later
-  sa.dataset.rec=rec;
-}
-
-// ── Go to final course page ──
-function goToResult(){
-  const rec=document.getElementById('summaryArea').dataset.rec;
-  document.getElementById('summaryArea').classList.remove('active');
-  showFinalResult(rec);
-}
-
-function showFinalResult(rec){
-  document.getElementById('resultArea').classList.add('active');
-
-  const titles={
-    'AI พื้นฐาน':'เริ่มต้นจากรากฐาน AI ที่ถูกต้อง',
-    'Marketing & Creative':'เพิ่มยอดขายด้วย AI สาย Marketing',
-    'All-in-One':'สเกลร้านแบบมีระบบด้วย AI ครบวงจร'
-  };
-  const descs={
-    'AI พื้นฐาน':'จากคะแนนของคุณ เราแนะนำให้เริ่มจากพื้นฐานก่อน เพื่อให้เข้าใจ AI อย่างถูกต้องและนำไปใช้งานได้จริงทันที ไม่หลงทาง',
-    'Marketing & Creative':'คุณมีพื้นฐานพร้อมแล้ว ขั้นต่อไปคือการใช้ AI สร้างคอนเทนต์และโฆษณาที่ดึงลูกค้าเข้าร้านได้อย่างต่อเนื่อง',
-    'All-in-One':'คุณพร้อมที่สุด! คอร์ส All-in-One จะปลดล็อกศักยภาพเต็มที่ ทั้ง Automation, Marketing และการบริหารทีมด้วย AI'
-  };
-
-  document.getElementById('resTag').textContent='แนะนำสำหรับระดับของคุณ';
-  document.getElementById('resTitle').textContent=titles[rec]||rec;
-  document.getElementById('resDesc').textContent=descs[rec]||'';
-
-  // course cards
-  const courses=[
-    {name:'AI พื้นฐาน สำหรับช่างไอที',desc:'เรียนรู้ AI ตั้งแต่ 0 ใช้งานจริงในร้านได้เลย ไม่ต้องมีพื้นฐานโค้ด',key:'AI พื้นฐาน',link:'https://shop.line.me/@072ujfbq/product/1007928670'},
-    {name:'AI Marketing & Creative',desc:'สร้างโพสต์ รูป วิดีโอ โฆษณา ด้วย AI x Marketing',key:'Marketing & Creative',link:'https://shop.line.me/@072ujfbq/product/1005925293'},
-    {name:'All-in-One AI สำหรับร้านช่าง',desc:'เจาะลึกเฉพาะงานที่ใช่ พร้อม Private Consult Ai Marketing',key:'All-in-One',link:'https://shop.line.me/@072ujfbq/product/1007755845'},
-  ];
-
-  const wrap=document.getElementById('courseCards');
-  wrap.innerHTML='';
-  courses.forEach(c=>{
-    const isRec=c.key===rec;
-    const div=document.createElement('div');
-    div.className='course-card'+(isRec?' recommended':'');
-    div.innerHTML=`<div class="course-top"><span class="course-name">${c.name}</span>${isRec?'<span class="course-rec-badge">แนะนำ</span>':''}</div><div class="course-desc">${c.desc}</div>`;
-    div.onclick=()=>{ window.location.href=c.link; };
-    wrap.appendChild(div);
-  });
-}
-
-function openEbook(){
-  window.open('https://drive.google.com/file/d/1RNk7bVGNgsI2xQ5NmAZIKMy2mpuOtUvv/view?usp=sharing','_blank');
-}
-
-function openConsult(){
-  const msg = encodeURIComponent('แชทส่วนตัว');
-  window.open('https://lin.ee/SfJVD4l?text=' + msg, '_blank');
-}
-
-function goBack(){
-  // กลับหน้าแชท LINE
-  window.history.back();
-}
+  function getList(name) { return Array.from(document.getElementsByName(name)).map(el => el.value); }
+  function getChecked(name) { return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value); }
+  
+  function checkRegStatus() {
+    const phone = document.getElementById('searchPhone').value;
+    if(!phone) return Swal.fire('ใส่เบอร์โทรด้วยครับ', '', 'info');
+    document.getElementById('statusResult').innerHTML = '<div class="spinner-border text-primary spinner-border-sm"></div> กำลังค้นหา...';
+    
+    google.script.run.withSuccessHandler(res => {
+      const div = document.getElementById('statusResult');
+      if(res.found) {
+        div.innerHTML = `
+          <div class="alert alert-success card shadow-sm border-0 border-start border-success border-4">
+            <div class="d-flex align-items-center">
+              <div class="ms-2">
+                <h5 class="fw-bold mb-1">✅ พบข้อมูลการลงทะเบียน</h5>
+                <p class="mb-0">ชื่อ: <b>คุณ${res.name}</b></p>
+                <p class="mb-0">สถานะ: <span class="badge bg-primary h6">${res.status}</span></p>
+              </div>
+            </div>
+          </div>`;
+      } else {
+        div.innerHTML = `<div class="alert alert-danger">❌ ไม่พบข้อมูลเบอร์โทร <b>${phone}</b> ในระบบ</div>`;
+      }
+    }).checkStatus(phone);
+  }
 </script>
+
 </body>
 </html>
